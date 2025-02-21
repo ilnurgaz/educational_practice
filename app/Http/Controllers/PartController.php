@@ -17,50 +17,39 @@ class PartController extends Controller
                 $query->where('name', 'like', '%' . $search . '%')
                       ->orWhere('article', 'like', '%' . $search . '%');
             })
-            ->paginate(10);
+            ->paginate(20);
 
         return view('parts.index', compact('parts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('parts.create');
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'article' => 'required|string|unique:parts,article',
-        ]);
+        try {
+            // Кастомные сообщения для валидации
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:parts,name',
+                'article' => 'required|string|unique:parts,article',
+            ], [
+                'name.unique' => 'Запчасть с таким названием уже существует.', // Кастомное сообщение для названия
+                'article.unique' => 'Запчасть с таким артикулом уже существует.', // Кастомное сообщение для артикула
+            ]);
 
-        Part::create($request->only('name', 'article'));
+            // Создание новой запчасти
+            Part::create([
+                'name' => $validated['name'],
+                'article' => $validated['article']
+            ]);
 
-        return redirect()->route('parts.index')->with('success', 'Запчасть успешно добавлена.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $part = Part::findOrFail($id);
-        return view('parts.show', compact('part'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $part = Part::findOrFail($id);
-        return view('parts.edit', compact('part'));
+            // Сообщение об успешном добавлении
+            return redirect()->route('parts.index')->with('success', 'Запчасть добавлена!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Сообщение об ошибке, если запчасть уже существует
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
     }
 
     /**

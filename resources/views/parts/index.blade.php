@@ -32,6 +32,7 @@
                 </ul>
             </div>
         @endif
+        
 
         <!-- Контейнер для поиска и формы добавления -->
         <div class="mb-4 flex flex-wrap justify-between items-center">
@@ -63,7 +64,13 @@
                             <td class="px-4 py-2">{{ $part->name }}</td>
                             <td class="px-4 py-2">{{ $part->article }}</td>
                             <td class="px-4 py-2">
-                                <a href="{{ route('parts.edit', $part->id) }}" class="text-blue-500 hover:text-blue-700 mr-2">Редактировать</a>
+                                <button 
+                                    class="editPartButton text-blue-500 hover:text-blue-700 mr-2" 
+                                    data-id="{{ $part->id }}" 
+                                    data-name="{{ $part->name }}" 
+                                    data-article="{{ $part->article }}">
+                                    Редактировать
+                                </button>
                                 <form action="{{ route('parts.destroy', $part->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -109,8 +116,34 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+<!-- Модальное окно для редактирования запчасти -->
+<div id="modal-edit-part" class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
+    <div class="bg-white p-6 rounded-lg w-full sm:w-[100%] md:w-2/3 lg:w-5/12">
+        <h2 class="text-2xl font-bold mb-4">Редактировать запчасть</h2>
+        <form id="editPartForm" method="POST">
+            @csrf
+            @method('PUT') <!-- Указываем правильный HTTP метод -->
+            <div class="mb-4">
+                <label for="edit-name" class="block mb-2">Название</label>
+                <input type="text" id="edit-name" name="name" class="w-full p-2 border rounded" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="edit-article" class="block mb-2">Артикул</label>
+                <input type="text" id="edit-article" name="article" class="w-full p-2 border rounded" required>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Сохранить</button>
+                <button type="button" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded" id="closeEditModal">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Модалка добавления
+    document.addEventListener('DOMContentLoaded', function () {
             const addPartButton = document.getElementById('addPartButton');
             const modal = document.getElementById('modal-add-part');
             const closeModalButton = document.getElementById('closeModalButton');
@@ -123,6 +156,42 @@
                 modal.classList.add('hidden');
             });
         });
-    </script>
+
+    // Модалка редактирования
+    document.addEventListener('DOMContentLoaded', function () {
+    const editModal = document.getElementById('modal-edit-part'); // Исправлено
+    const editForm = document.getElementById('editPartForm');
+    const editNameInput = document.getElementById('edit-name');
+    const editArticleInput = document.getElementById('edit-article');
+    const closeEditModal = document.getElementById('closeEditModal');
+
+    document.querySelectorAll('.editPartButton').forEach(button => {
+        button.addEventListener('click', function () {
+            const partId = this.dataset.id;
+            const partName = this.dataset.name;
+            const partArticle = this.dataset.article;
+
+            // Заполняем форму данными
+            editNameInput.value = partName;
+            editArticleInput.value = partArticle;
+
+            // Устанавливаем action с правильным маршрутом
+            editForm.action = `/parts/${partId}`;
+
+            // Показываем модальное окно
+            editModal.classList.remove('hidden');
+        });
+    });
+
+    // Закрытие модального окна
+    closeEditModal.addEventListener('click', () => {
+        editModal.classList.add('hidden');
+    });
+});
+
+</script>
+
 </body>
 </html>
+
+
