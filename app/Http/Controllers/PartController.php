@@ -13,18 +13,25 @@ class PartController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $parts = Part::query()
-            ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('article', 'like', '%' . $search . '%');
-            })
-            ->paginate(20);
+{
+    $parts = Part::query()
+        ->when(request('search'), function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('article', 'like', '%' . $search . '%');
+            });
+        })
+        ->when(request('supplier_id'), function ($query, $supplierId) {
+            $query->whereHas('suppliers', function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            });
+        })
+        ->paginate(20);
 
-        $suppliers = Supplier::all(); // Получаем всех поставщиков
+    $suppliers = Supplier::all(); // Получаем всех поставщиков
 
-        return view('parts.index', compact('parts', 'suppliers'));
-    }
+    return view('parts.index', compact('parts', 'suppliers'));
+}
 
 
     /**

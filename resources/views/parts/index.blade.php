@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Запчасти</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-gray-100 p-5">
@@ -38,20 +36,31 @@
 
 
         <!-- Контейнер для поиска и формы добавления -->
-        <div class="mb-4 flex flex-wrap justify-between items-center">
+        <div class="flex flex-wrap justify-between items-center">
             <!-- Форма поиска -->
-            <form action="{{ route('parts.index') }}" method="GET" class="w-full sm:w-auto mb-4 sm:mb-0">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder='Поиск...'
-                    class="w-full sm:w-80 p-2 border rounded" placeholder="Поиск по названию или артикулу">
+            <form action="{{ route('parts.index') }}" method="GET" class="w-full mb-5 sm:w-auto flex flex-col sm:flex-row space-x-2 gap-3">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Поиск..."
+                    class="w-full sm:w-80 p-2 border rounded min-w-[200px]">
+
+                <select name="supplier_id" class="p-2 border rounded w-[100%] sm:w-[200px] sm:w-[100%] !ml-0">
+                    <option value="">Все поставщики</option>
+                    @foreach($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                            {{ $supplier->name }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded !ml-0">Фильтровать</button>
             </form>
 
             <!-- Форма добавления -->
-            <div class="flex sm:justify-start justify-start sm:justify-end  w-full mt-5 sm:mt-0 w-[100%] sm:sm:w-auto">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" id="addPartButton">Добавить запчасть</button>
+            <div class="flex sm:justify-start justify-start sm:justify-end w-full w-[100%] sm:w-auto ml-0 mb-5">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded w-full" id="addPartButton">Добавить запчасть</button>
             </div>
         </div>
 
-        <div class="overflow-y-hidden my-5">
+        <div class="overflow-y-hidden mb-5">
             <table class="w-full overflow-y-scroll table-auto bg-white shadow-lg rounded-lg">
                 <thead class="bg-gray-200">
                     <tr>
