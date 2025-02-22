@@ -18,6 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
     Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+
+
+    Route::get('/parts/{id}/edit', [PartController::class, 'edit'])->name('parts.edit');
+    Route::put('/parts/{id}', [PartController::class, 'update'])->name('parts.update');
+
 });
 
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,37 +9,40 @@
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
+
 <body class="bg-gray-100 p-5">
     <div class="container mx-auto">
 
         <h1 class="text-3xl font-bold mb-5">Запчасти</h1>
         @if (session('success'))
-            <div id="success-message" class="bg-green-500 text-white p-4 rounded mb-4 fade-out">
-                {{ session('success') }}
-            </div>
-            <script>
-                setTimeout(function() {
-                    document.getElementById('success-message').style.display = 'none';
-                }, 3000); // Скрыть сообщение через 3 секунды
-            </script>
+        <div id="success-message" class="bg-green-500 text-white p-4 rounded mb-4 fade-out">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(function () {
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000); // Скрыть сообщение через 3 секунды
+
+        </script>
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-500 text-white p-4 rounded mb-4 fade-out">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="bg-red-500 text-white p-4 rounded mb-4 fade-out">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
-        
+
 
         <!-- Контейнер для поиска и формы добавления -->
         <div class="mb-4 flex flex-wrap justify-between items-center">
             <!-- Форма поиска -->
             <form action="{{ route('parts.index') }}" method="GET" class="w-full sm:w-auto mb-4 sm:mb-0">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder='Поиск...' class="w-full sm:w-80 p-2 border rounded" placeholder="Поиск по названию или артикулу">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder='Поиск...'
+                    class="w-full sm:w-80 p-2 border rounded" placeholder="Поиск по названию или артикулу">
             </form>
 
             <!-- Форма добавления -->
@@ -59,91 +63,81 @@
                 </thead>
                 <tbody>
                     @foreach($parts as $part)
-                        <tr class="border-t">
-                            <td class="px-4 py-2">{{ $part->id }}</td>
-                            <td class="px-4 py-2">{{ $part->name }}</td>
-                            <td class="px-4 py-2">{{ $part->article }}</td>
-                            <td class="px-4 py-2">
-                                <button 
-                                    class="editPartButton text-blue-500 hover:text-blue-700 mr-2" 
-                                    data-id="{{ $part->id }}" 
-                                    data-name="{{ $part->name }}" 
-                                    data-article="{{ $part->article }}">
-                                    Редактировать
-                                </button>
-                                <form action="{{ route('parts.destroy', $part->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700">Удалить</button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr class="border-t">
+                        <td class="px-4 py-2">{{ $part->id }}</td>
+                        <td class="px-4 py-2">{{ $part->name }}</td>
+                        <td class="px-4 py-2">{{ $part->article }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{{ route('parts.edit', $part->id) }}" class="text-blue-500 hover:text-blue-700 mr-2">
+                                Редактировать
+                            </a>
+                            <form action="{{ route('parts.destroy', $part->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
 
         @if($parts->isEmpty())
-            <p class="mt-4 text-red-500">Запчасти не найдены.</p>
+        <p class="mt-4 text-red-500">Запчасти не найдены.</p>
         @endif
 
         <!-- Пагинация -->
-        {{ $parts->appends(request()->input())->links() }}        
+        {{ $parts->appends(request()->input())->links() }}
 
     </div>
 
     <!-- Модальное окно для добавления запчасти -->
-    <div id="modal-add-part" class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
+    <div id="modal-add-part"
+        class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
         <div class="bg-white p-6 rounded-lg w-full sm:w-[100%] md:w-2/3 lg:w-5/12">
             <h2 class="text-2xl font-bold mb-4">Добавить запчасть</h2>
             <form action="{{ route('parts.store') }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <label for="name" class="block mb-2">Название</label>
-                    <input type="text" id="name" name="name" class="w-full p-2 border rounded @error('name') border-red-500 @enderror" required>
+                    <input type="text" id="name" name="name"
+                        class="w-full p-2 border rounded @error('name') border-red-500 @enderror" required>
                 </div>
 
                 <div class="mb-4">
                     <label for="article" class="block mb-2">Артикул</label>
-                    <input type="text" id="article" name="article" class="w-full p-2 border rounded @error('article') border-red-500 @enderror" required>
+                    <input type="text" id="article" name="article"
+                        class="w-full p-2 border rounded @error('article') border-red-500 @enderror" required>
+                </div>
+                <label class="block mb-2">Выберите поставщиков и укажите цену</label>
+                <div class="mb-4 px-3 overflow-y-scroll" style='max-height: 200px;' id="supplierList">
+                    @foreach($suppliers as $supplier)
+                    <div class="flex justify-between mb-2">
+                        <div class="">
+                            <input type="checkbox" id="supplier_{{ $supplier->id }}"
+                                name="suppliers[{{ $supplier->id }}][selected]" value="1" class="mr-2">
+                            <label for="supplier_{{ $supplier->id }}" class="mr-4">{{ $supplier->name }}</label>
+                        </div>
+                        <input type="number" step="0.01" min="0" name="suppliers[{{ $supplier->id }}][price]"
+                            placeholder="Цена" class="p-2 border rounded w-32">
+                    </div>
+                    @endforeach
                 </div>
 
                 <div class="flex justify-end">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Добавить</button>
-                    <button type="button" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded" id="closeModalButton">Отмена</button>
+                    <button type="button" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded"
+                        id="closeModalButton">Отмена</button>
                 </div>
             </form>
+
         </div>
     </div>
 
-<!-- Модальное окно для редактирования запчасти -->
-<div id="modal-edit-part" class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
-    <div class="bg-white p-6 rounded-lg w-full sm:w-[100%] md:w-2/3 lg:w-5/12">
-        <h2 class="text-2xl font-bold mb-4">Редактировать запчасть</h2>
-        <form id="editPartForm" method="POST">
-            @csrf
-            @method('PUT') <!-- Указываем правильный HTTP метод -->
-            <div class="mb-4">
-                <label for="edit-name" class="block mb-2">Название</label>
-                <input type="text" id="edit-name" name="name" class="w-full p-2 border rounded" required>
-            </div>
-
-            <div class="mb-4">
-                <label for="edit-article" class="block mb-2">Артикул</label>
-                <input type="text" id="edit-article" name="article" class="w-full p-2 border rounded" required>
-            </div>
-
-            <div class="flex justify-end">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Сохранить</button>
-                <button type="button" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded" id="closeEditModal">Отмена</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    // Модалка добавления
-    document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        // Модалка добавления
+        document.addEventListener('DOMContentLoaded', function () {
             const addPartButton = document.getElementById('addPartButton');
             const modal = document.getElementById('modal-add-part');
             const closeModalButton = document.getElementById('closeModalButton');
@@ -157,41 +151,16 @@
             });
         });
 
-    // Модалка редактирования
-    document.addEventListener('DOMContentLoaded', function () {
-    const editModal = document.getElementById('modal-edit-part'); // Исправлено
-    const editForm = document.getElementById('editPartForm');
-    const editNameInput = document.getElementById('edit-name');
-    const editArticleInput = document.getElementById('edit-article');
-    const closeEditModal = document.getElementById('closeEditModal');
+        // Получаем элементы формы и модального окна
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const editNameInput = document.getElementById('editName');
+        const editArticleInput = document.getElementById('editArticle');
+        const supplierContainer = document.getElementById('supplierList');
+        const closeModalButton = document.getElementById('closeModal');
 
-    document.querySelectorAll('.editPartButton').forEach(button => {
-        button.addEventListener('click', function () {
-            const partId = this.dataset.id;
-            const partName = this.dataset.name;
-            const partArticle = this.dataset.article;
-
-            // Заполняем форму данными
-            editNameInput.value = partName;
-            editArticleInput.value = partArticle;
-
-            // Устанавливаем action с правильным маршрутом
-            editForm.action = `/parts/${partId}`;
-
-            // Показываем модальное окно
-            editModal.classList.remove('hidden');
-        });
-    });
-
-    // Закрытие модального окна
-    closeEditModal.addEventListener('click', () => {
-        editModal.classList.add('hidden');
-    });
-});
-
-</script>
+    </script>
 
 </body>
+
 </html>
-
-
