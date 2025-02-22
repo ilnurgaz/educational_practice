@@ -103,12 +103,15 @@ class PartController extends Controller
      
      public function update(Request $request, $id)
 {
-    // Валидация входных данных
+    // Валидация входных данных с кастомными сообщениями
     $request->validate([
-        'name' => 'required|string|max:255',
-        'article' => 'required|string|max:255',
+        'name' => 'required|string|max:255|unique:parts,name,' . $id,
+        'article' => 'required|string|max:255|unique:parts,article,' . $id,
         'suppliers' => 'array',
         'suppliers.*.price' => 'nullable|numeric|min:0',
+    ], [
+        'name.unique' => 'Запчасть с таким названием уже существует.',
+        'article.unique' => 'Запчасть с таким артикулом уже существует.',
     ]);
 
     // Находим запчасть по ID
@@ -132,8 +135,8 @@ class PartController extends Controller
     // Сохраняем связь с поставщиками и их ценами
     $part->suppliers()->sync($syncData);
 
-    // Перенаправляем с сообщением об успешном обновлении
-    return redirect()->route('parts.index')->with('success', 'Запчасть успешно обновлена');
+    // Оставаться на странице редактирования после успешного обновления
+    return redirect()->route('parts.edit', $part->id)->with('success', 'Запчасть успешно обновлена');
 }
 
 
