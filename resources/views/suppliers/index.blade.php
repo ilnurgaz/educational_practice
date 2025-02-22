@@ -79,7 +79,8 @@
                             <td class="px-4 py-2">{{ $supplier->name }}</td>
                             <td class="px-4 py-2">{{ $supplier->address }}</td>
                             <td class="px-4 py-2">{{ $supplier->phone }}</td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-2 flex gap-2">
+                                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="text-blue-500 hover:text-blue-700 mr-2">Редактировать</a>
                                 <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -134,7 +135,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        const addSupplierButton = document.getElementById('addSupplierButton');
+        const addSupplierButton = document.getElementById('addPartButton');
         const modal = document.getElementById('modal-add-supplier');
         const closeModalButton = document.getElementById('closeModalButton');
         const form = modal.querySelector('form');

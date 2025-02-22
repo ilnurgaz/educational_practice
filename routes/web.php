@@ -23,6 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/parts/{id}/edit', [PartController::class, 'edit'])->name('parts.edit');
     Route::put('/parts/{id}', [PartController::class, 'update'])->name('parts.update');
 
+    Route::get('/suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+
+
 });
 
 

@@ -61,6 +61,37 @@ class SupplierController extends Controller
     }
 
 
+    public function edit($id)
+{
+    $supplier = Supplier::with('supplierParts')->findOrFail($id);
+    $parts = \App\Models\Part::all();
+    return view('suppliers.edit', compact('supplier', 'parts'));
+}
+
+public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'name' => 'required|max:255|unique:suppliers,name,' . $id,
+        'address' => 'required|max:255',
+        'phone' => 'nullable|max:15',
+        'parts' => 'required|array',
+    ]);
+
+    $supplier = Supplier::findOrFail($id);
+    $supplier->update([
+        'name' => $validated['name'],
+        'address' => $validated['address'],
+        'phone' => $validated['phone'],
+    ]);
+
+    // Обновляем связанные запчасти
+    $supplier->supplierParts()->sync($validated['parts']);
+
+    return redirect()->route('suppliers.index')->with('success', 'Данные поставщика обновлены!');
+}
+
+
+
     public function destroy($id)
     {
         $supplier = Supplier::findOrFail($id);
