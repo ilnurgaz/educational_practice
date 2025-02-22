@@ -70,26 +70,35 @@ class SupplierController extends Controller
 
 public function update(Request $request, $id)
 {
-    $validated = $request->validate([
-        'name' => 'required|max:255|unique:suppliers,name,' . $id,
-        'address' => 'required|max:255',
-        'phone' => 'nullable|max:15',
-        'parts' => 'required|array',
+    $request->validate([
+        'name' => 'required|string|max:255|unique:suppliers,name,' . $id,
+        'address' => 'nullable|string|max:255',
+        'phone' => 'nullable|string|max:20',
+        'parts' => 'array',
+        'parts.*.price' => 'nullable|numeric|min:0',
+    ], [
+        'name.unique' => 'Поставщик с таким названием уже существует.',
     ]);
 
     $supplier = Supplier::findOrFail($id);
+
     $supplier->update([
-        'name' => $validated['name'],
-        'address' => $validated['address'],
-        'phone' => $validated['phone'],
+        'name' => $request->name,
+        'address' => $request->address,
+        'phone' => $request->phone,
     ]);
 
-    // Обновляем связанные запчасти
-    $supplier->supplierParts()->sync($validated['parts']);
+    $syncData = [];
+    foreach ($request->parts ?? [] as $partId => $data) {
+        if (isset($data['selected'])) {
+            $syncData[$partId] = ['price' => $data['price'] ?? 0];
+        }
+    }
 
-    return redirect()->route('suppliers.index')->with('success', 'Данные поставщика обновлены!');
+    $supplier->parts()->sync($syncData);
+
+    return redirect()->route('suppliers.edit', $supplier->id)->with('success', 'Поставщик успешно обновлен');
 }
-
 
 
     public function destroy($id)

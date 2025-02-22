@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поставщики</title>
+    <title>Редактировать поставщиков</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
@@ -61,10 +61,14 @@
             <div class="mb-4">
                 <label class="block mb-2">Запчасти</label>
                 @foreach ($parts as $part)
-                <div>
-                    <input type="checkbox" name="parts[]" value="{{ $part->id }}"
-                        {{ $supplier->supplierParts->contains($part->id) ? 'checked' : '' }}>
+                <div class="flex items-center gap-2 mb-2">
+                    <input type="checkbox" name="parts[{{ $part->id }}][selected]" value="1"
+                        {{ $supplier->parts->contains($part->id) ? 'checked' : '' }}>
                     <label>{{ $part->name }}</label>
+
+                    <input type="number" name="parts[{{ $part->id }}][price]" placeholder="Цена"
+                        value="{{ $supplier->parts->find($part->id)?->pivot->price ?? '' }}"
+                        class="p-1 border rounded w-24 ml-2">
                 </div>
                 @endforeach
             </div>

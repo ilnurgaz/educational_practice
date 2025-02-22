@@ -18,4 +18,11 @@ class Supplier extends Model
     public function purchases() {
         return $this->hasMany(Purchase::class);
     }
+
+    public function parts()
+{
+    return $this->belongsToMany(Part::class, 'supplier_parts')
+                ->withPivot('price')
+                ->withTimestamps();
+}
 }
