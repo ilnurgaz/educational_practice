@@ -38,25 +38,32 @@
         <!-- Контейнер для поиска и формы добавления -->
         <div class="flex flex-wrap justify-between items-center">
             <!-- Форма поиска -->
-            <form action="{{ route('parts.index') }}" method="GET" class="w-full mb-5 sm:w-auto flex flex-col sm:flex-row space-x-2 gap-3">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Поиск..."
-                    class="w-full sm:w-80 p-2 border rounded min-w-[200px]">
+            <form action="{{ route('parts.index') }}" method="GET" class="w-full sm:w-auto flex flex-col space-x-2 gap-3">
+                <div class="flex gap-3 flex-col sm:flex-row">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Поиск..."
+                        class="w-full sm:w-80 p-2 border rounded sm:min-w-[200px]">
 
-                <select name="supplier_id" class="p-2 border rounded w-[100%] sm:w-[200px] sm:w-[100%] !ml-0">
-                    <option value="">Все поставщики</option>
-                    @foreach($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
-                            {{ $supplier->name }}
-                        </option>
-                    @endforeach
-                </select>
+                    <select name="supplier_id" class="p-2 border rounded w-[100%] sm:w-[200px] sm:w-[100%] !ml-0">
+                        <option value="">Все поставщики</option>
+                        @foreach($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                {{ $supplier->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded !ml-0">Фильтровать</button>
+                <div class="flex gap-3 flex-col sm:flex-row !ml-0">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded !ml-0">Фильтровать</button>
+                    @if (request()->has('search') || request()->has('supplier_id'))
+                        <a href="{{ route('parts.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded !ml-0 text-center">Сбросить</a>
+                    @endif
+                </div>
             </form>
 
             <!-- Форма добавления -->
-            <div class="flex sm:justify-start justify-start sm:justify-end w-full w-[100%] sm:w-auto ml-0 mb-5">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded w-full" id="addPartButton">Добавить запчасть</button>
+            <div class="flex justify-start w-full ml-0 mb-5 mt-3">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" id="addPartButton">Добавить запчасть</button>
             </div>
         </div>
 

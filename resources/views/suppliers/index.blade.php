@@ -35,19 +35,33 @@
 
 
         <!-- Контейнер для поиска и формы добавления -->
-        <div class="mb-4 flex flex-wrap justify-between items-center">
+        <div class="mb-4 flex flex-col">
             <!-- Форма поиска -->
-            <form action="{{ route('suppliers.index') }}" method="GET" class="w-full sm:w-auto mb-4 sm:mb-0">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder='Поиск...' class="w-full sm:w-80 p-2 border rounded" placeholder="Поиск по названию">
+            <form action="{{ route('suppliers.index') }}" method="GET" class="w-full sm:w-auto flex flex-col space-x-2 gap-3">
+                <div class="flex gap-3 flex-col sm:flex-row">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Поиск по названию" class="w-full sm:w-80 p-2 border rounded sm:min-w-[200px]">
+                    <select name="part_id" class="p-2 border rounded w-[100%] sm:w-[200px] sm:w-[100%] !ml-0">
+                        <option value="">Все запчасти</option>
+                        @foreach ($parts as $part)
+                            <option value="{{ $part->id }}" {{ request('part_id') == $part->id ? 'selected' : '' }}>{{ $part->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex gap-3 flex-col sm:flex-row !ml-0">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded !ml-0">Фильтровать</button>
+                    @if (request()->has('search') || request()->has('part_id'))
+                        <a href="{{ route('suppliers.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded !ml-0 text-center">Сбросить</a>
+                    @endif
+                </div>
             </form>
 
             <!-- Форма добавления -->
-            <div class="flex sm:justify-start justify-start sm:justify-end  w-full mt-5 sm:mt-0 w-[100%] sm:sm:w-auto">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" id="addSupplierButton">Добавить поставщика</button>
+            <div class="flex justify-start w-full ml-0 mb-5 mt-3">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" id="addPartButton">Добавить поставщика</button>
             </div>
         </div>
 
-        <div class="overflow-y-hidden my-5">
+        <div class="overflow-y-hidden mb-5">
             <table class="w-full overflow-y-scroll table-auto bg-white shadow-lg rounded-lg">
                 <thead class="bg-gray-200">
                     <tr>
@@ -83,7 +97,7 @@
         @endif
 
         <!-- Пагинация -->
-        {{ $suppliers->appends(request()->input())->links() }}        
+        {{ $suppliers->appends(request()->input())->links() }}
 
     </div>
 

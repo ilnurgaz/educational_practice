@@ -12,15 +12,25 @@ class SupplierController extends Controller
     {
         $query = Supplier::query();
 
-        // Если есть запрос на поиск
+        // Фильтрация по названию
         if ($request->has('search') && $request->input('search') !== '') {
             $query->where('name', 'like', '%' . $request->input('search') . '%');
         }
 
-        // Пагинация по 20 элементов, после применения фильтра
+        // Фильтрация по запчастям
+        if ($request->has('part_id') && $request->input('part_id') !== '') {
+            $query->whereHas('supplierParts', function ($q) use ($request) {
+                $q->where('part_id', $request->input('part_id'));
+            });
+        }
+
+        // Пагинация
         $suppliers = $query->paginate(20);
 
-        return view('suppliers.index', compact('suppliers'));
+        // Получаем список всех запчастей для фильтра
+        $parts = \App\Models\Part::all();
+
+        return view('suppliers.index', compact('suppliers', 'parts'));
     }
 
     public function store(Request $request)
