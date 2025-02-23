@@ -16,4 +16,11 @@ class Part extends Model
                     ->withPivot('price')
                     ->withTimestamps();
     }
+
+    public function purchases()
+    {
+        return $this->belongsToMany(Purchase::class, 'purchase_items')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
 }

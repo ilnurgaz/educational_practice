@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\PurchaseController;
 
 
 
@@ -30,6 +31,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/suppliers/{supplier}/parts', [SupplierController::class, 'storePart'])->name('suppliers.storePart');
     Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
 
+    Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::post('/purchases', [PurchaseController::class, 'store'])->name('purchases.store');
+
+    Route::get('/purchases/select-supplier', [PurchaseController::class, 'selectSupplier'])->name('purchases.selectSupplier');
+    Route::post('/purchases/choose-supplier', [PurchaseController::class, 'chooseSupplier'])->name('purchases.chooseSupplier');
+
+    Route::get('/purchases/create/{supplier}', [PurchaseController::class, 'createPurchase'])->name('purchases.createWithSupplier');
+    Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
 });
 
 

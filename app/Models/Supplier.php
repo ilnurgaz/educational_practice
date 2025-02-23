@@ -25,4 +25,5 @@ class Supplier extends Model
                 ->withPivot('price')
                 ->withTimestamps();
 }
+
 }

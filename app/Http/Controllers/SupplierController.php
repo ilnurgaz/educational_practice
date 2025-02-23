@@ -35,6 +35,11 @@ class SupplierController extends Controller
         return view('suppliers.index', compact('suppliers', 'parts'));
     }
 
+    public function getParts(Supplier $supplier)
+    {
+        return $supplier->parts()->withPivot('price')->get();
+    }
+
     public function store(Request $request)
     {
         try {
