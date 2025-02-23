@@ -109,6 +109,17 @@ public function update(Request $request, $id)
     return redirect()->route('suppliers.edit', $supplier->id)->with('success', 'Поставщик успешно обновлен');
 }
 
+public function show($id)
+{
+    $supplier = Supplier::with(['parts' => function ($query) {
+        $query->paginate(20);
+    }])->findOrFail($id);
+
+    $parts = $supplier->parts()->paginate(20);
+
+    return view('suppliers.show', compact('supplier', 'parts'));
+}
+
 public function storePart(Request $request, $supplierId)
 {
     $request->validate([

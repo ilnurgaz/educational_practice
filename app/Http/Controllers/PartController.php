@@ -33,6 +33,12 @@ class PartController extends Controller
     return view('parts.index', compact('parts', 'suppliers'));
 }
 
+public function show($id)
+{
+    $part = Part::with('suppliers')->findOrFail($id);
+
+    return view('parts.show', compact('part'));
+}
 
     /**
      * Store a newly created resource in storage.

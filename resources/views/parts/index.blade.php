@@ -38,7 +38,8 @@
         <!-- Контейнер для поиска и формы добавления -->
         <div class="flex flex-wrap justify-between items-center">
             <!-- Форма поиска -->
-            <form action="{{ route('parts.index') }}" method="GET" class="w-full sm:w-auto flex flex-col space-x-2 gap-3">
+            <form action="{{ route('parts.index') }}" method="GET"
+                class="w-full sm:w-auto flex flex-col space-x-2 gap-3">
                 <div class="flex gap-3 flex-col sm:flex-row">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Поиск..."
                         class="w-full sm:w-80 p-2 border rounded sm:min-w-[200px]">
@@ -46,9 +47,10 @@
                     <select name="supplier_id" class="p-2 border rounded w-[100%] sm:w-[200px] sm:w-[100%] !ml-0">
                         <option value="">Все поставщики</option>
                         @foreach($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
-                                {{ $supplier->name }}
-                            </option>
+                        <option value="{{ $supplier->id }}"
+                            {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                            {{ $supplier->name }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -56,14 +58,16 @@
                 <div class="flex gap-3 flex-col sm:flex-row !ml-0">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded !ml-0">Фильтровать</button>
                     @if (request()->has('search') || request()->has('supplier_id'))
-                        <a href="{{ route('parts.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded !ml-0 text-center">Сбросить</a>
+                    <a href="{{ route('parts.index') }}"
+                        class="bg-gray-500 text-white px-4 py-2 rounded !ml-0 text-center">Сбросить</a>
                     @endif
                 </div>
             </form>
 
             <!-- Форма добавления -->
             <div class="flex justify-start w-full ml-0 mb-5 mt-3">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" id="addPartButton">Добавить запчасть</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" id="addPartButton">Добавить
+                    запчасть</button>
             </div>
         </div>
 
@@ -83,8 +87,11 @@
                         <td class="px-4 py-2">{{ $part->id }}</td>
                         <td class="px-4 py-2">{{ $part->name }}</td>
                         <td class="px-4 py-2">{{ $part->article }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{{ route('parts.edit', $part->id) }}" class="text-blue-500 hover:text-blue-700 mr-2">
+                        <td class="px-4 py-2 flex gap-2">
+                            <a href="{{ route('parts.show', $part->id) }}" class="text-green-500 hover:text-green-700">
+                                Посмотреть
+                            </a>
+                            <a href="{{ route('parts.edit', $part->id) }}" class="text-blue-500 hover:text-blue-700">
                                 Редактировать
                             </a>
                             <form action="{{ route('parts.destroy', $part->id) }}" method="POST" class="inline">
@@ -97,6 +104,7 @@
                     @endforeach
                 </tbody>
             </table>
+
         </div>
 
         @if($parts->isEmpty())
