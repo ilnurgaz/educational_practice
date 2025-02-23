@@ -69,7 +69,7 @@
                     </div>
                     <input type="number" step="0.01" min="0" name="suppliers[{{ $supplier->id }}][price]"
                         value="{{ $part->suppliers->find($supplier->id)?->pivot->price ?? '' }}"
-                        class="p-2 border rounded w-32">
+                        class="p-1 border rounded w-24 ml-2">
                 </div>
                 @endforeach
 
@@ -81,7 +81,7 @@
                         <label>{{ $supplier->name }}</label>
                     </div>
                     <input type="number" step="0.01" min="0" name="suppliers[{{ $supplier->id }}][price]" value=""
-                        class="p-2 border rounded w-32">
+                        class="p-1 border rounded w-24 ml-2">
                 </div>
                 @endforeach
             </div>

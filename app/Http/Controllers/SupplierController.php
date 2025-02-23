@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\Part;
+use App\Models\SupplierPart;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -82,6 +84,13 @@ public function update(Request $request, $id)
 
     $supplier = Supplier::findOrFail($id);
 
+    // Проверка выбранных запчастей на наличие цены
+    foreach ($request->parts ?? [] as $partId => $data) {
+        if (isset($data['selected']) && (empty($data['price']) || $data['price'] <= 0)) {
+            return redirect()->back()->withErrors(['parts.' . $partId . '.price' => 'Для выбранной запчасти должна быть указана цена'])->withInput();
+        }
+    }
+
     $supplier->update([
         'name' => $request->name,
         'address' => $request->address,
@@ -91,13 +100,40 @@ public function update(Request $request, $id)
     $syncData = [];
     foreach ($request->parts ?? [] as $partId => $data) {
         if (isset($data['selected'])) {
-            $syncData[$partId] = ['price' => $data['price'] ?? 0];
+            $syncData[$partId] = ['price' => $data['price']];
         }
     }
 
     $supplier->parts()->sync($syncData);
 
     return redirect()->route('suppliers.edit', $supplier->id)->with('success', 'Поставщик успешно обновлен');
+}
+
+public function storePart(Request $request, $supplierId)
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:parts,name',
+        'article' => 'required|string|max:255|unique:parts,article',
+        'price' => 'required|numeric|min:0',
+    ], [
+        'name.unique' => 'Запчасть с таким названием уже существует.',
+        'article.unique' => 'Запчасть с таким артикулом уже существует.',
+        'price.required' => 'Цена обязательна для заполнения.',
+    ]);
+
+    $supplier = Supplier::findOrFail($supplierId);
+
+    // Создание новой запчасти
+    $part = Part::create([
+        'name' => $request->name,
+        'article' => $request->article,
+    ]);
+
+    // Привязка запчасти к поставщику с ценой
+    $supplier->parts()->attach($part->id, ['price' => $request->price]);
+
+    return redirect()->route('suppliers.edit', $supplier->id)
+        ->with('success', 'Запчасть успешно добавлена и связана с поставщиком.');
 }
 
 
