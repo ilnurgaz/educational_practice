@@ -37,9 +37,19 @@
                     <input type="date" name="date_to" class="p-2 border rounded" value="{{ request('date_to') }}">
                 </div>
 
-                <div class="flex items-end w-full sm:w-1/4">
+               
+                <div class="flex items-end w-full sm:w-1/4 gap-3">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Фильтровать</button>
-                </div>
+                    </div>
+
+                    @if(request('supplier_id') || request('date_from') || request('date_to'))
+                        <div class="flex items-end w-full sm:w-1/4">
+                            <a href="{{ route('purchases.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded w-full text-center">
+                                Сбросить
+                            </a>
+                        </div>
+                    @endif
+
                 <div class="flex justify-end w-full sm:w-1/4">
                     <a href="{{ route('purchases.selectSupplier') }}" class="bg-blue-600 hover:bg-blue-700 w-full text-white px-4 py-2 rounded text-center transition duration-300">
                         Добавить закупку
