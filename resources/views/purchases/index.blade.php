@@ -9,11 +9,11 @@
 </head>
 
 <body class="bg-gray-100 p-5">
-    <div class="container mx-auto">
+    <div class="container mx-auto p-5 rounded shadow bg-white">
         <h1 class="text-3xl font-bold mb-5">Список закупок</h1>
 
         <!-- Форма фильтрации -->
-        <form method="GET" action="{{ route('purchases.index') }}" class="mb-5 bg-white p-5 rounded shadow">
+        <form method="GET" action="{{ route('purchases.index') }}" class="mb-5">
             <div class="flex flex-wrap gap-4">
                 <div class="flex flex-col w-full sm:w-1/4">
                     <label for="supplier_id" class="mb-1 font-medium">Поставщик</label>

@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class='p-5'>
+<body class='p-5 bg-gray-100'>
     <div class="container mx-auto bg-white shadow p-4 rounded-lg">
         <h1 class="text-3xl font-bold mb-5">Добавить закупку для {{ $supplier->name }}</h1>
 

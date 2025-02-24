@@ -9,7 +9,7 @@
 </head>
 
 <body class="bg-gray-100 p-5">
-    <div class="container mx-auto">
+    <div class="container mx-auto bg-white shadow p-4 rounded-lg">
 
         <h1 class="text-3xl font-bold mb-5">Запчасти</h1>
         @if (session('success'))
