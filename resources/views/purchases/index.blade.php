@@ -67,6 +67,7 @@
                         <th class="px-4 py-2 text-left">Поставщик</th>
                         <th class="px-4 py-2 text-left">Статус</th>
                         <th class="px-4 py-2 text-left">Стоимость</th>
+                        <th class="px-4 py-2 text-left">Действия</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,8 +75,13 @@
                     <tr class="border-t">
                         <td class="px-4 py-2">{{ $purchase->purchase_date }}</td>
                         <td class="px-4 py-2">{{ $purchase->supplier->name }}</td>
-                        <td class="px-4 py-2">{{ $purchase->status }}</td>
+                        <td class="px-4 py-2">{{ $purchase->status_text }}</td>
                         <td class="px-4 py-2">{{ $purchase->total_amount ? number_format($purchase->total_amount, 2) . ' ₽' : 'Не указано' }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{{ route('purchases.edit', $purchase->id) }}" class="text-blue-500 hover:text-blue-700">
+                                Перейти
+                            </a>
+                        </td>
                     </tr>
                     @empty
                     <tr>

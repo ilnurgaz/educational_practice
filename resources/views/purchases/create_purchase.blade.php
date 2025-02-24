@@ -7,8 +7,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    <div class="container mx-auto">
+<body class='p-5'>
+    <div class="container mx-auto bg-white shadow p-4 rounded-lg">
         <h1 class="text-3xl font-bold mb-5">Добавить закупку для {{ $supplier->name }}</h1>
 
         @if ($errors->any())

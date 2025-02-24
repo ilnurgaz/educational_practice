@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\PurchaseItem;
+use Carbon\Carbon;
 
 class PurchaseController extends Controller
 {
@@ -47,9 +48,11 @@ class PurchaseController extends Controller
     }
 
     // Отображение формы создания закупки с выбранным поставщиком
-    public function createPurchase(Supplier $supplier)
+    public function createPurchase($supplier_id)
     {
+        $supplier = Supplier::findOrFail($supplier_id);
         $parts = $supplier->parts()->withPivot('price')->get();
+
         return view('purchases.create_purchase', compact('supplier', 'parts'));
     }
 
@@ -88,6 +91,34 @@ class PurchaseController extends Controller
 
     // Перенаправление с уведомлением об успешном создании
     return redirect()->route('purchases.index')->with('success', 'Закупка успешно создана');
+}
+
+public function edit($id)
+{
+    $purchase = Purchase::with('parts')->findOrFail($id); // Загружаем запчасти вместе с закупкой
+    $statuses = ['Ожидает', 'В процессе', 'Завершено']; // Примерные статусы
+    return view('purchases.edit', compact('purchase', 'statuses'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|integer',
+    ]);
+
+    $purchase = Purchase::findOrFail($id);
+    $oldStatus = $purchase->status;
+
+    $purchase->status = $request->status;
+
+    // Обновляем дату при смене статуса на "Завершена"
+    if ($oldStatus != $request->status && $request->status == 2) { // Предполагаем, что 2 — это "Завершена"
+        $purchase->updated_at = Carbon::now();
+    }
+
+    $purchase->save();
+
+    return redirect()->route('purchases.edit', $purchase->id)->with('success', 'Статус закупки обновлён');
 }
     
 }

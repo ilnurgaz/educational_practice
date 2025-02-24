@@ -31,4 +31,24 @@ class Purchase extends Model
             return $item->quantity * $item->price;
         });
     }
+
+
+    const STATUS_IN_PROGRESS = 0;
+    const STATUS_CANCELED = 1;
+    const STATUS_COMPLETED = 2;
+
+    public static function getStatusList()
+    {
+        return [
+            self::STATUS_IN_PROGRESS => 'В процессе',
+            self::STATUS_CANCELED => 'Отменена',
+            self::STATUS_COMPLETED => 'Завершена',
+        ];
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return self::getStatusList()[$this->status] ?? 'Неизвестный статус';
+    }
+
 }

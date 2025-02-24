@@ -33,12 +33,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
     Route::post('/purchases', [PurchaseController::class, 'store'])->name('purchases.store');
-
     Route::get('/purchases/select-supplier', [PurchaseController::class, 'selectSupplier'])->name('purchases.selectSupplier');
     Route::post('/purchases/choose-supplier', [PurchaseController::class, 'chooseSupplier'])->name('purchases.chooseSupplier');
-
     Route::get('/purchases/create/{supplier}', [PurchaseController::class, 'createPurchase'])->name('purchases.createWithSupplier');
     Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
+    Route::get('/purchases/{id}/edit', [PurchaseController::class, 'edit'])->name('purchases.edit');
+    Route::post('/purchases/{id}/update', [PurchaseController::class, 'update'])->name('purchases.update');
+    Route::put('/purchases/{purchase}/update', [PurchaseController::class, 'update'])->name('purchases.update');
+    Route::get('/purchases/create/{supplier_id}', [PurchaseController::class, 'createPurchase'])
+    ->name('purchases.createWithSupplier');
+
 });
 
 
