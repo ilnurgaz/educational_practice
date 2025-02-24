@@ -5,22 +5,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\HomeController;
+
 
 
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-   
-    Route::get('/', [SupplierController::class, 'index']);
 
     Route::resource('parts', PartController::class);
     Route::get('/parts/{id}/edit', [PartController::class, 'edit'])->name('parts.edit');
     Route::put('/parts/{id}', [PartController::class, 'update'])->name('parts.update');
     Route::get('/parts/{part}', [PartController::class, 'show'])->name('parts.show');
-
 
     Route::resource('suppliers', SupplierController::class);
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
@@ -43,7 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchases/create/{supplier_id}', [PurchaseController::class, 'createPurchase'])
     ->name('purchases.createWithSupplier');
 
-});
 
+
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+
+});
 
 require __DIR__.'/auth.php';
