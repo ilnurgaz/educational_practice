@@ -9,6 +9,9 @@
 </head>
 
 <body class="bg-gray-100 p-5">
+
+    @include('partials.navbar')
+
     <div class="container mx-auto bg-white shadow p-4 rounded-lg">
         <h1 class="text-3xl font-bold mb-5">Выберите поставщика</h1>
 

@@ -10,26 +10,10 @@
     @vite('resources/js/app.js')
 </head>
 
-<div class="container mx-auto p-6 rounded-lg shadow-md bg-white mb-4"> <!-- Изменен фон на белый -->
-    <nav class="flex justify-between items-center"> <!-- Добавлено выравнивание по краям -->
-        <ul class="flex space-x-8"> <!-- Увеличен отступ между элементами -->
-            <li><a href="{{ route('home') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Главная</a></li>
-            <li><a href="{{ route('suppliers.index') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Поставщики</a></li>
-            <li><a href="{{ route('parts.index') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Запчасти</a></li>
-            <li><a href="{{ route('purchases.index') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Закупки</a></li>
-        </ul>
-        <div class="flex items-center space-x-4"> <!-- Контейнер для кнопок профиля и выхода -->
-            <form action="{{ route('logout') }}" method="POST" class="inline-block"> <!-- Форма для выхода -->
-                @csrf
-                <button type="submit" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Выход</button>
-            </form>
-        </div>
-    </nav>
-    @yield('content')
-</div>
-
 <body class="bg-gray-100 p-5">
-    
+
+    @include('partials.navbar')
+
     <div class="container mx-auto p-5 rounded shadow bg-white">
 
         <h1 class="text-3xl font-bold mb-5">Поставщики</h1>
@@ -40,7 +24,7 @@
         <script>
             setTimeout(function () {
                 document.getElementById('success-message').style.display = 'none';
-            }, 3000); // Скрыть сообщение через 3 секунды
+            }, 3000); 
 
         </script>
         @endif
@@ -56,9 +40,7 @@
         @endif
 
 
-        <!-- Контейнер для поиска и формы добавления -->
         <div class="mb-4 flex flex-col">
-            <!-- Форма поиска -->
             <form action="{{ route('suppliers.index') }}" method="GET"
                 class="w-full sm:w-auto flex flex-col space-x-2 gap-3">
                 <div class="flex gap-3 flex-col sm:flex-row">
@@ -81,7 +63,6 @@
                 </div>
             </form>
 
-            <!-- Форма добавления -->
             <div class="flex justify-start w-full ml-0 mb-5 mt-3">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" id="addPartButton">Добавить
                     поставщика</button>
@@ -107,7 +88,8 @@
                         <td class="px-4 py-2">{{ $supplier->address }}</td>
                         <td class="px-4 py-2">{{ $supplier->phone }}</td>
                         <td class="px-4 py-2 flex gap-2">
-                            <a href="{{ route('suppliers.show', $supplier->id) }}" class='text-green-500 hover:text-green-700'>Посмотреть</a>
+                            <a href="{{ route('suppliers.show', $supplier->id) }}"
+                                class='text-green-500 hover:text-green-700'>Посмотреть</a>
                             <a href="{{ route('suppliers.edit', $supplier->id) }}"
                                 class="text-blue-500 hover:text-blue-700">Редактировать</a>
                             <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" class="inline">
@@ -126,12 +108,10 @@
         <p class="mt-4 text-red-500">Поставщики не найдены.</p>
         @endif
 
-        <!-- Пагинация -->
         {{ $suppliers->appends(request()->input())->links() }}
 
     </div>
 
-    <!-- Модальное окно для добавления поставщика -->
     <div id="modal-add-supplier"
         class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
         <div class="bg-white p-6 rounded-lg w-full sm:w-[100%] md:w-2/3 lg:w-5/12">
@@ -183,22 +163,17 @@
                 modal.classList.add('hidden');
             });
 
-            // Валидация перед отправкой формы
             form.addEventListener('submit', function (event) {
                 const name = nameInput.value.trim();
                 const address = document.getElementById('address').value.trim();
                 const phone = document.getElementById('phone').value.trim();
 
-                // Проверка на пустые поля
                 if (!name || !address || !phone) {
                     event.preventDefault();
                     alert("Все поля должны быть заполнены!");
                     return;
                 }
 
-                // Проверка уникальности названия на стороне клиента
-                // Примерно можно посылать AJAX-запрос или выполнять проверку локально
-                // Но для реальной валидации уникальности нужно использовать серверную логику (показано ниже)
             });
         });
 

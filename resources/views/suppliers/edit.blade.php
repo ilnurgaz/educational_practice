@@ -11,6 +11,9 @@
 </head>
 
 <body class="bg-gray-100 p-5">
+
+    @include('partials.navbar')
+
     <div class="container mx-auto p-5 rounded shadow bg-white">
 
         <h1 class="text-3xl font-bold mb-5">Поставщики</h1>
@@ -22,6 +25,7 @@
             setTimeout(function () {
                 document.getElementById('success-message').style.display = 'none';
             }, 3000);
+
         </script>
         @endif
 
@@ -59,13 +63,14 @@
 
             <label class="block mb-2">Запчасти</label>
             <div class="my-3">
-                <button type="button" class="bg-green-500 text-white px-4 py-2 rounded" onclick="openModal()">Добавить запчасть</button>
+                <button type="button" class="bg-green-500 text-white px-4 py-2 rounded" onclick="openModal()">Добавить
+                    запчасть</button>
             </div>
             <div class="mb-4 overflow-y-scroll max-h-[300px]">
                 @php
-                    $sortedParts = $parts->sortByDesc(function($part) use ($supplier) {
-                        return $supplier->parts->contains($part->id) ? 1 : 0;
-                    });
+                $sortedParts = $parts->sortByDesc(function($part) use ($supplier) {
+                return $supplier->parts->contains($part->id) ? 1 : 0;
+                });
                 @endphp
                 @foreach ($sortedParts as $part)
                 <div class="flex items-center gap-2 mb-2 justify-between">
@@ -87,8 +92,8 @@
             </div>
         </form>
 
-        <!-- Модальное окно -->
-        <div id="addPartModal" class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
+        <div id="addPartModal"
+            class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
             <div class="bg-white p-6 rounded-lg w-full sm:w-[100%] md:w-2/3 lg:w-5/12">
                 <h2 class="text-xl font-bold mb-4">Добавить запчасть</h2>
                 <form action="{{ route('suppliers.storePart', $supplier->id) }}" method="POST">
@@ -108,7 +113,8 @@
                     </div>
                     <div class="flex gap-3">
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Создать</button>
-                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded" onclick="closeModal()">Отмена</button>
+                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded"
+                            onclick="closeModal()">Отмена</button>
                     </div>
                 </form>
             </div>
@@ -122,7 +128,9 @@
             function closeModal() {
                 document.getElementById('addPartModal').classList.add('hidden');
             }
+
         </script>
     </div>
 </body>
+
 </html>

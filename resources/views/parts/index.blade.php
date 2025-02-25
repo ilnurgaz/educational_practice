@@ -8,26 +8,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<div class="container mx-auto p-6 rounded-lg shadow-md bg-white mb-4"> <!-- Изменен фон на белый -->
-    <nav class="flex justify-between items-center"> <!-- Добавлено выравнивание по краям -->
-        <ul class="flex space-x-8"> <!-- Увеличен отступ между элементами -->
-            <li><a href="{{ route('home') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Главная</a></li>
-            <li><a href="{{ route('suppliers.index') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Поставщики</a></li>
-            <li><a href="{{ route('parts.index') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Запчасти</a></li>
-            <li><a href="{{ route('purchases.index') }}" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Закупки</a></li>
-        </ul>
-        <div class="flex items-center space-x-4"> <!-- Контейнер для кнопок профиля и выхода -->
-            <form action="{{ route('logout') }}" method="POST" class="inline-block"> <!-- Форма для выхода -->
-                @csrf
-                <button type="submit" class="text-gray-800 text-lg hover:text-blue-600 transition duration-200 ml-4">Выход</button>
-            </form>
-        </div>
-    </nav>
-    @yield('content')
-</div>
-
-
 <body class="bg-gray-100 p-5">
+
+    @include('partials.navbar')
+
     <div class="container mx-auto bg-white shadow p-4 rounded-lg">
 
         <h1 class="text-3xl font-bold mb-5">Запчасти</h1>
@@ -38,7 +22,7 @@
         <script>
             setTimeout(function () {
                 document.getElementById('success-message').style.display = 'none';
-            }, 3000); // Скрыть сообщение через 3 секунды
+            }, 3000); 
 
         </script>
         @endif
@@ -54,9 +38,7 @@
         @endif
 
 
-        <!-- Контейнер для поиска и формы добавления -->
         <div class="flex flex-wrap justify-between items-center">
-            <!-- Форма поиска -->
             <form action="{{ route('parts.index') }}" method="GET"
                 class="w-full sm:w-auto flex flex-col space-x-2 gap-3">
                 <div class="flex gap-3 flex-col sm:flex-row">
@@ -83,7 +65,6 @@
                 </div>
             </form>
 
-            <!-- Форма добавления -->
             <div class="flex justify-start w-full ml-0 mb-5 mt-3">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" id="addPartButton">Добавить
                     запчасть</button>
@@ -130,12 +111,10 @@
         <p class="mt-4 text-red-500">Запчасти не найдены.</p>
         @endif
 
-        <!-- Пагинация -->
         {{ $parts->appends(request()->input())->links() }}
 
     </div>
 
-    <!-- Модальное окно для добавления запчасти -->
     <div id="modal-add-part"
         class="fixed flex items-center justify-center inset-0 bg-gray-800 bg-opacity-50 hidden z-50 px-5">
         <div class="bg-white p-6 rounded-lg w-full sm:w-[100%] md:w-2/3 lg:w-5/12">
@@ -179,7 +158,6 @@
     </div>
 
     <script>
-        // Модалка добавления
         document.addEventListener('DOMContentLoaded', function () {
             const addPartButton = document.getElementById('addPartButton');
             const modal = document.getElementById('modal-add-part');
@@ -194,7 +172,6 @@
             });
         });
 
-        // Получаем элементы формы и модального окна
         const editModal = document.getElementById('editModal');
         const editForm = document.getElementById('editForm');
         const editNameInput = document.getElementById('editName');

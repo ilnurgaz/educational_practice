@@ -9,6 +9,9 @@
 </head>
 
 <body class="bg-gray-100 p-5">
+
+    @include('partials.navbar')
+
     <div class="container mx-auto">
         <h1 class="text-3xl font-bold mb-5">Закупка</h1>
         @if(session('success'))

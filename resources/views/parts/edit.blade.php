@@ -11,30 +11,34 @@
 </head>
 
 <body class="bg-gray-100 p-5">
+
+    @include('partials.navbar')
+
     <div class="container mx-auto bg-white shadow p-4 rounded-lg">
 
         <h1 class="text-3xl font-bold mb-5">Редактировать запчасть</h1>
 
         @if (session('success'))
-            <div id="success-message" class="bg-green-500 text-white p-4 rounded mb-4 fade-out">
-                {{ session('success') }}
-            </div>
-            <script>
-                setTimeout(function() {
-                    document.getElementById('success-message').style.display = 'none';
-                }, 3000); // Скрыть сообщение через 3 секунды
-            </script>
+        <div id="success-message" class="bg-green-500 text-white p-4 rounded mb-4 fade-out">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(function () {
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000); 
+
+        </script>
         @endif
 
         {{-- Вывод ошибок валидации --}}
         @if ($errors->any())
-            <div class="bg-red-500 text-white p-4 rounded mb-4 fade-out">
-                <ul>
+        <div class="bg-red-500 text-white p-4 rounded mb-4 fade-out">
+            <ul>
                 @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <form action="{{ route('parts.update', $part->id) }}" method="POST" class='sm:max-w-[500px]'>
@@ -56,8 +60,8 @@
             <label class="block mb-2">Поставщики и цена</label>
             <div class="mb-4 overflow-y-scroll sm:max-w-[500px] max-h-[300px]">
                 @php
-                    $selectedSuppliers = $suppliers->filter(fn($supplier) => $part->suppliers->contains($supplier->id));
-                    $unselectedSuppliers = $suppliers->reject(fn($supplier) => $part->suppliers->contains($supplier->id));
+                $selectedSuppliers = $suppliers->filter(fn($supplier) => $part->suppliers->contains($supplier->id));
+                $unselectedSuppliers = $suppliers->reject(fn($supplier) => $part->suppliers->contains($supplier->id));
                 @endphp
 
                 {{-- Отображаем выбранных поставщиков сначала --}}
