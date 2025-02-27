@@ -6,6 +6,9 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ChartController;
+
+Route::get('/sales-data', [ChartController::class, 'getSalesData']);
 
 
 
